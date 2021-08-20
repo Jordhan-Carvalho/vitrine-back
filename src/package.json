@@ -1,0 +1,19 @@
+{
+  "name": "vitrine",
+  "version": "1.0.0",
+  "description": "vitrine backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Jordhan Carvalho",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.973.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.83",
+    "@types/node": "^16.7.0"
+  }
+}

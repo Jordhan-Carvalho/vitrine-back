@@ -1,0 +1,5 @@
+{
+  "vitrine-backend/hello": {
+    "NEW_CANDIDATE_SQS": "https://sqs.us-east-1.amazonaws.com/005218143664/newCandidateSQS.fifo"
+  }
+}
