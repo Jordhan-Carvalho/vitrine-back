@@ -8,5 +8,12 @@
   },
   "keywords": [],
   "author": "Jordhan Carvalho",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.973.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.83",
+    "@types/node": "^16.7.0"
+  }
 }
