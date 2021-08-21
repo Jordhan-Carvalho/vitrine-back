@@ -37,15 +37,19 @@ export class VitrineStack extends cdk.Stack {
       },
       backupRetention: cdk.Duration.days(0),
       deleteAutomatedBackups: true,
-      removalPolicy: cdk.RemovalPolicy.DESTROY
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      publiclyAccessible: true
     });
 
-
+    rdsDBinstance.connections.allowDefaultPortFromAnyIpv4('Open to the world');
 
 
     // OUTPUTS
-    new cdk.CfnOutput(this, 'dbEndpoint', {
+    new cdk.CfnOutput(this, 'dbEndpointExport', {
       value: rdsDBinstance.instanceEndpoint.hostname,
+      exportName: 'dbEnpoint',
+      description: 'DB endpoint'
     });
+
   }
 }
