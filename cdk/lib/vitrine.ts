@@ -21,9 +21,27 @@ export class VitrineStack extends cdk.Stack {
 
 
     // VPC NEEDED FOR RDS CREATION
+    // const natGatewayProvider = ec2.NatProvider.instance({
+    //   instanceType: new ec2.InstanceType('t2.small'),
+    // });
     const vpc = new ec2.Vpc(this, "vitrine-vpc", {
-      maxAzs: 2
+      // cidr: '10.0.0.0/16',
+      maxAzs: 2,
+      natGateways: 0,
+      subnetConfiguration: [
+        {
+          cidrMask: 24,
+          name: 'public',
+          subnetType: ec2.SubnetType.PUBLIC,
+        },
+        {
+          cidrMask: 28,
+          name: 'rds',
+          subnetType: ec2.SubnetType.ISOLATED,
+      },
+      ]
     });
+
     // RDS
     const rdsDBinstance = new rds.DatabaseInstance(this, 'vtnPostgresRDS', {
       engine: rds.DatabaseInstanceEngine.postgres({ version: rds.PostgresEngineVersion.VER_12_7 }),
