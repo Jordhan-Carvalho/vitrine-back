@@ -10,12 +10,10 @@
   "author": "Jordhan Carvalho",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^2.29.1",
     "aws-sdk": "^2.973.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.83",
-    "@types/node": "^16.7.0",
-    "prisma": "^2.29.1"
+    "@types/node": "^16.7.0"
   }
 }

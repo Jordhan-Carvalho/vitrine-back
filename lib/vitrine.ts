@@ -16,24 +16,25 @@ export class VitrineStack extends cdk.Stack {
       runtime: Runtime.NODEJS_14_X,
       environment: {
         NEW_CANDIDATE_SQS: "test",
-        DATABASE_URL: "test2"
+        DATABASE_URL: "postgresql://testando:testing1234@vv18r829v8p5tp5.cpyl3hphd5rb.us-east-1.rds.amazonaws.com:5432/vitrine?schema=public"
       },
+      timeout: cdk.Duration.seconds(6),
       bundling: {
         nodeModules: ['@prisma/client', 'prisma'],
         commandHooks: {
-          beforeInstall(inputDir: string, outputDir: string): string[] {
-            return [``];
+          beforeBundling(_inputDir: string, _outputDir: string) {
+            return []
           },
-          beforeBundling(inputDir: string, outputDir: string): string[] {
-            return [``];
+          beforeInstall(inputDir: string, outputDir: string) {
+            return [`cp -R ${inputDir}/prisma ${outputDir}/`]
           },
-          afterBundling(inputDir: string, outputDir: string): string[] {
+          afterBundling(_inputDir: string, outputDir: string) {
             return [
-              // クエリエンジンを追加
-              `cp ${inputDir}/node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x ${outputDir}`,
-              // スキーマ定義を追加
-              `cp ${inputDir}/prisma/schema.prisma ${outputDir}`,
-            ];
+              `cd ${outputDir}`,
+              `npx prisma generate`,
+              `rm -rf node_modules/@prisma/engines`,
+              `rm -rf node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
+            ]
           },
         }
       }
