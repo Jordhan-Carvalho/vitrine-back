@@ -1,0 +1,95 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  regionId  String    @db.VarChar(255)
+  region    Region    @relation(fields: [regionId], references: [name])
+  products  Product[]
+  stores    Store[]
+}
+
+model Region {
+  name   String @id @unique @db.VarChar(255)
+  cities City[]
+}
+
+model Store {
+  id            Int           @id @default(autoincrement())
+  title         String        @db.VarChar(255)
+  description   String        @db.VarChar(255)
+  banner        String        @db.VarChar(255)
+  deletedAt     DateTime?     @db.Timestamp(6)
+  plan          String        @db.VarChar(255)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  categoryId    Int
+  cityId        Int
+  storeCategory StoreCategory @relation(fields: [categoryId], references: [id])
+  city          City          @relation(fields: [cityId], references: [id])
+  products      Product[]
+  usersStore    User[]
+}
+
+model StoreCategory {
+  id     Int     @id @default(autoincrement())
+  name   String  @db.VarChar(255)
+  stores Store[]
+}
+
+model Product {
+  id              Int             @id @default(autoincrement())
+  description     String          @db.VarChar(255)
+  price           BigInt
+  title           String          @db.VarChar(255)
+  condition       String          @db.VarChar(255)
+  zap             String          @db.VarChar(255)
+  reports         Int             @default(0)
+  photos          String          @default("0") @db.VarChar(255)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  categoryId      Int
+  cityId          Int
+  storeId         Int?
+  userId          Int
+  productCategory ProductCategory @relation(fields: [categoryId], references: [id])
+  city            City            @relation(fields: [cityId], references: [id])
+  store           Store?          @relation(fields: [storeId], references: [id])
+  user            User            @relation(fields: [userId], references: [id])
+  userFavorites   User[]          @relation("favorites")
+}
+
+model ProductCategory {
+  id       Int       @id @default(autoincrement())
+  name     String    @db.VarChar(255)
+  products Product[]
+}
+
+model User {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  email         String    @db.VarChar(255)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  groupId       Int
+  userGroup     UserGroup @relation(fields: [groupId], references: [id])
+  products      Product[]
+  userStores    Store[]
+  userFavorites Product[] @relation("favorites")
+}
+
+model UserGroup {
+  id    Int    @id @default(autoincrement())
+  name  String @db.VarChar(255)
+  users User[]
+}

@@ -11,11 +11,31 @@ export class VitrineStack extends cdk.Stack {
 
     // LAMBDA
     const helloLambda = new lambda.NodejsFunction(this, 'hello', {
-      entry: path.join(__dirname, '../../src/functions/hello.ts'), 
+      entry: path.join(__dirname, '../src/functions/hello.ts'), 
       handler: 'main',
       runtime: Runtime.NODEJS_14_X,
       environment: {
-        NEW_CANDIDATE_SQS: "test"
+        NEW_CANDIDATE_SQS: "test",
+        DATABASE_URL: "test2"
+      },
+      bundling: {
+        nodeModules: ['@prisma/client', 'prisma'],
+        commandHooks: {
+          beforeInstall(inputDir: string, outputDir: string): string[] {
+            return [``];
+          },
+          beforeBundling(inputDir: string, outputDir: string): string[] {
+            return [``];
+          },
+          afterBundling(inputDir: string, outputDir: string): string[] {
+            return [
+              // クエリエンジンを追加
+              `cp ${inputDir}/node_modules/.prisma/client/query-engine-rhel-openssl-1.0.x ${outputDir}`,
+              // スキーマ定義を追加
+              `cp ${inputDir}/prisma/schema.prisma ${outputDir}`,
+            ];
+          },
+        }
       }
     });
 
