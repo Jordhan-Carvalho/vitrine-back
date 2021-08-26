@@ -11,11 +11,32 @@ export class VitrineStack extends cdk.Stack {
 
     // LAMBDA
     const helloLambda = new lambda.NodejsFunction(this, 'hello', {
-      entry: path.join(__dirname, '../../src/functions/hello.ts'), 
+      entry: path.join(__dirname, '../src/functions/hello.ts'), 
       handler: 'main',
       runtime: Runtime.NODEJS_14_X,
       environment: {
-        NEW_CANDIDATE_SQS: "test"
+        NEW_CANDIDATE_SQS: "test",
+        DATABASE_URL: "postgresql://testando:testing1234@vv18r829v8p5tp5.cpyl3hphd5rb.us-east-1.rds.amazonaws.com:5432/vitrine?schema=public"
+      },
+      timeout: cdk.Duration.seconds(6),
+      bundling: {
+        nodeModules: ['@prisma/client', 'prisma'],
+        commandHooks: {
+          beforeBundling(_inputDir: string, _outputDir: string) {
+            return []
+          },
+          beforeInstall(inputDir: string, outputDir: string) {
+            return [`cp -R ${inputDir}/prisma ${outputDir}/`]
+          },
+          afterBundling(_inputDir: string, outputDir: string) {
+            return [
+              `cd ${outputDir}`,
+              `npx prisma generate`,
+              `rm -rf node_modules/@prisma/engines`,
+              `rm -rf node_modules/@prisma/client/node_modules node_modules/.bin node_modules/prisma`,
+            ]
+          },
+        }
       }
     });
 

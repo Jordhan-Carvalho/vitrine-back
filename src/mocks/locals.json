@@ -1,5 +1,6 @@
 {
   "vitrine-backend/hello": {
-    "NEW_CANDIDATE_SQS": "https://sqs.us-east-1.amazonaws.com/005218143664/newCandidateSQS.fifo"
+    "NEW_CANDIDATE_SQS": "https://sqs.us-east-1.amazonaws.com/005218143664/newCandidateSQS.fifo",
+    "DATABASE_URL": "postgresql://testando:testing1234@vv18r829v8p5tp5.cpyl3hphd5rb.us-east-1.rds.amazonaws.com:5432/vitrine?schema=public"
   }
 }
